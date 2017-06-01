@@ -1,0 +1,219 @@
+{
+  "id": "da9554ae-d3fe-4254-ac44-d4d2152d4a7b",
+  "name": "RedDApplyEntityFrameworkMigrationsWithMigrate",
+  "friendlyName": "Apply Secure Entity Framework Migrations",
+  "description": "Apply Entity Framework migrations using migrate.exe without exposing database credentials",
+  "author": "Red D Solutions",
+  "helpMarkDown": "Apply Entity Framework migrations using migrate.exe",
+  "category": "Deploy",
+  "visibility": [
+    "Release"
+  ],
+  "demands": [],
+  "version": {
+    "Major": "1",
+    "Minor": "0",
+    "Patch": "9"
+  },
+  "minimumAgentVersion": "1.95.0",
+  "instanceNameFormat": "Apply Entity Framework migrations",
+  "groups": [
+    {
+      "name": "folders",
+      "displayName": "Folders",
+      "isExpanded": true
+    },
+    {
+      "name": "configuration",
+      "displayName": "Configuration",
+      "isExpanded": true
+    },
+	{
+      "name": "firewall",
+      "displayName": "Firewall",
+      "isExpanded": true
+    },
+    {
+      "name": "advanced",
+      "displayName": "Advanced",
+      "isExpanded": false
+    }
+  ],
+  "inputs": [
+    {
+      "name": "WorkingFolder",
+      "type": "filePath",
+      "label": "Working directory",
+      "required": true,
+      "helpMarkDown": "The root folder from wich to work. This folder should contain migrate.exe and the bin folder which contains the Entity Framework dll and the dll containing the migrations and the configuration file with connection string.",
+      "groupName": "folders"
+    },
+    {
+      "name": "BinFolder",
+      "type": "string",
+      "label": "Binaries folder",
+      "required": true,
+      "helpMarkDown": "The folder containing the binaries (EntityFramework.dll and your DLL with the migrations). This folder should be relative to the working folder above!",
+      "groupName": "folders",
+      "defaultValue": "bin"
+    },
+    {
+      "name": "MigrateExeFolder",
+      "type": "string",
+      "label": "Migrate folder",
+      "helpMarkDown": "The folder containing migrate.exe, relative to the working folder above",
+      "defaultValue": "Migrate",
+      "groupName": "folders",
+      "required": true
+    },
+    {
+      "name": "ConfigurationFile",
+      "type": "string",
+      "label": "Configuration file",
+      "required": false,
+      "helpMarkDown": "The Web.config or app.config containing the connection string to use.  Migrate.exe may error out if you don't provide this, even if you aren't using it",
+      "groupName": "configuration"
+    },
+	{
+      "name": "ConnectionString",
+      "type": "string",
+      "label": "Connection String",
+      "required": false,
+      "helpMarkDown": "ConnectionString to use instead of a ConfigurationFile",
+      "groupName": "configuration"
+    },
+	{
+      "name": "ConnectionProviderName",
+      "type": "string",
+      "label": "Connection Provider Name",
+      "required": false,
+      "helpMarkDown": "Specifies the provider invariant name of the connection string",
+      "groupName": "configuration"
+    },
+    {
+      "name": "TargetAssembly",
+      "type": "string",
+      "label": "Target assembly",
+      "required": true,
+      "helpMarkDown": "The **filename** of the assembly containing the migrations.",
+      "groupName": "configuration"
+    },
+    {
+      "name": "TargetDbContextConfiguration",
+      "type": "string",
+      "label":  "DbContext configuration",
+      "required": false,
+      "helpMarkDown": "The namespace and name of the migrations configuration you wish to execute, in case of multiple DbContexts",
+      "groupName": "configuration"
+    },
+	{
+		"name": "IpDetectionMethod",
+		"type": "pickList",
+		"label": "Specify Firewall Rules Using",
+		"required": true,
+		"groupName": "firewall",
+		"defaultValue": "AutoDetect",
+		"options": {
+			"None": "None",
+			"AutoDetect": "AutoDetect",
+			"IPAddressRange": "IPAddressRange"
+		},
+		"helpMarkDown": "For the task to run, the IP Address of the automation agent has to be added to the 'Allowed IP Addresses' in the Azure SQL Server's Firewall. Select auto-detect to automatically add firewall exception for range of possible IP Address of automation agent or specify the range explictly."
+	},
+	{
+		"name": "StartIpAddress",
+		"type": "string",
+		"label": "Start IP Address",
+		"required": true,
+		"groupName": "firewall",
+		"defaultValue": "",
+		"visibleRule": "IpDetectionMethod = IPAddressRange",
+		"helpMarkDown": "The starting IP Address of the automation agent machine pool like 196.21.30.50."
+	},
+	{
+		"name": "EndIpAddress",
+		"type": "string",
+		"label": "End IP Address",
+		"required": true,
+		"groupName": "firewall",
+		"defaultValue": "",
+		"visibleRule": "IpDetectionMethod = IPAddressRange",
+		"helpMarkDown": "The ending IP Address of the automation agent machine pool like 196.21.30.65."
+	},
+	{
+		"name": "ConnectedServiceNameSelector",
+		"type": "pickList",
+		"label": "Azure Connection Type",
+		"required": false,
+		"groupName": "firewall",
+		"helpMarkDown": "",
+		"defaultValue": "ConnectedServiceName",
+		"options": {
+			"ConnectedServiceName": "Azure Classic",
+			"ConnectedServiceNameARM": "Azure Resource Manager"
+		}
+	},
+	{
+		"name": "ConnectedServiceName",
+		"type": "connectedService:Azure",
+		"label": "Azure Classic Subscription",
+		"defaultValue": "",
+		"required": true,
+		"groupName": "firewall",
+		"helpMarkDown": "Target Azure Classic subscription for setting firewall rules",
+		"visibleRule": "ConnectedServiceNameSelector = ConnectedServiceName"
+	},
+	{
+		"name": "ConnectedServiceNameARM",
+		"type": "connectedService:AzureRM",
+		"label": "Azure Subscription",
+		"defaultValue": "",
+		"required": true,
+		"groupName": "firewall",
+		"helpMarkDown": "Target Azure Resource Manager subscription for setting firewall rules",
+		"visibleRule": "ConnectedServiceNameSelector = ConnectedServiceNameARM"
+	},
+	{
+		"name": "ServerName",
+		"type": "string",
+		"label": "Server Name",
+		"required": false,
+		"groupName": "firewall",
+		"defaultValue": "",
+		"helpMarkDown": "The name of the server that requires the firewall rule (ex xyz.database.windows.net)"
+	},
+	{
+		"name": "SqlUsername",
+		"type": "string",
+		"label": "Sql User Name",
+		"required": false,
+		"groupName": "firewall",
+		"defaultValue": "",
+		"helpMarkDown": "User Name for an account on the Server which will be used to detect the agents IP address when set to AutoDetect"
+	},
+	{
+		"name": "SqlUserPassword",
+		"type": "string",
+		"label": "Sql Password",
+		"required": false,
+		"groupName": "firewall",
+		"defaultValue": "",
+		"helpMarkDown": "Password for the account specified above"
+	},
+    {
+      "name": "UseVerbose",
+      "type": "boolean",
+      "label": "Verbose Migrations",
+      "required": false,
+      "defaultValue": false,
+      "groupName": "advanced",
+      "helpMarkDown": "Enable or disable verbose logging"
+    }
+
+  ],
+  "execution": {
+        "PowerShell3": {
+            "target": "ApplyEntityFrameworkMigrationsWithMigrate.ps1"
+        }
+	},
+}

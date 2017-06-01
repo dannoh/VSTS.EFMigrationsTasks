@@ -1,0 +1,64 @@
+{
+  "manifestVersion": 1,
+  "id": "RedDEFMigrations",
+  "name": "RedD Entity Framework Migrations",
+  "version": "1.0.11",
+  "publisher": "DannOh",
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "Two tasks to run EntityFramework Migrations during your release, without exposing your database credentials in config files",
+  "categories": [
+    "Build and release"
+  ],
+  "links": {
+    "home": {
+      "uri": "https://www.danno.ca/"
+    },
+    "support": {
+      "uri": ""
+    },
+    "repository": {
+      "uri": ""
+    },
+    "issues": {
+      "uri": ""
+    }
+  },
+  "icons": {
+    "default": "icon.png"
+  },
+  "content": {
+    "details": {
+      "path": "overview.md"
+    }
+  },
+  "files": [    
+    { "path": "CopyEntityFrameworkMigrate" },
+    { "path": "ApplyEntityFrameworkMigrationsWithMigrate" }	
+  ],
+  "contributions": [
+    {
+      "id": "RedCopyEntityFrameworkMigrate",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "CopyEntityFrameworkMigrate"
+      }
+    },
+    {
+      "id": "RedDApplyEntityFrameworkMigrationsWithMigrate",
+      "type": "ms.vss-distributed-task.task",
+      "targets": [
+        "ms.vss-distributed-task.tasks"
+      ],
+      "properties": {
+        "name": "ApplyEntityFrameworkMigrationsWithMigrate"
+      }
+    }
+  ]
+}
